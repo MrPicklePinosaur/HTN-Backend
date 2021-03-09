@@ -1,11 +1,31 @@
-import express from 'express'
+import 'reflect-metadata';
+import { ApolloServer } from 'apollo-server-express';
+import { buildSchema, Query, Resolver } from 'type-graphql';
+import express from 'express';
+import { User } from './types/User.types';
 
-const app = express();
+@Resolver()
+class UserResolver {
 
-app.get("/", (req, res) => {
-    res.send("<h1>lol</h1>");
-});
+    @Query(() => String)
+    async getUser() {
+        return "test"
+    }
 
-app.listen(3000, () => {
-    console.log('server starged');
-});
+}
+
+const main = async () => {
+    const schema = await buildSchema({
+        resolvers: [ UserResolver ]
+    });
+
+    const apollo = new ApolloServer({ schema });
+    const app = express();
+    apollo.applyMiddleware({ app });
+
+    app.listen(3000, () => {
+        console.log("server started");
+    });
+}
+
+main();
