@@ -1,18 +1,10 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
-import { buildSchema, Query, Resolver } from 'type-graphql';
+import { buildSchema } from 'type-graphql';
 import express from 'express';
-import { User } from './types/User.types';
 
-@Resolver()
-class UserResolver {
+import { UserResolver } from './resolver';
 
-    @Query(() => String)
-    async getUser() {
-        return "test"
-    }
-
-}
 
 const main = async () => {
     const schema = await buildSchema({

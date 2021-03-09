@@ -12,13 +12,16 @@ export class Skill {
 @ObjectType()
 export class User {
     @Field()
+    id: number;
+
+    @Field()
     name: String;
 
-    @Field()
-    picture: String;
+    @Field({ nullable: true })
+    picture?: String;
 
-    @Field()
-    company: String;
+    @Field({ nullable: true })
+    company?: String;
 
     @Field()
     email: String;
