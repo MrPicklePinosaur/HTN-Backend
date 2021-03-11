@@ -1,8 +1,6 @@
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
 import { Skill, User } from './types/User.types';
-import { dummyUsers } from './services/db.service';
 
-/* bit of code duplication, sorta ugly */
 @InputType()
 class UpdateUserInput implements Partial<User> {
 
@@ -21,14 +19,13 @@ class UpdateUserInput implements Partial<User> {
 
 @Resolver()
 export class UserResolver {
-    private userCollection: User[] = dummyUsers;
 
     @Query(() => [User])
     async getUsers (
         @Arg("id", { nullable: true }) id: number
     ): Promise<User[]> {
 
-        let filtered = this.userCollection;
+        let filtered = await User.find();
 
         if (id != null) filtered = filtered.filter(user => user.id === id);
 
@@ -40,14 +37,14 @@ export class UserResolver {
         @Arg("id", {}) id: number,
         @Arg('newdata', {}) newdata: UpdateUserInput
     ) {
-        var updateuser: User|undefined = this.userCollection.find(user => user.id === id);
+        // var updateuser: User|undefined = this.userCollection.find(user => user.id === id);
 
-        if (updateuser != undefined) {
-            console.log( {
-                ...updateuser,
-                ...newdata
-            });
-        }
+        // if (updateuser != undefined) {
+        //     console.log( {
+        //         ...updateuser,
+        //         ...newdata
+        //     });
+        // }
 
         return "updated";
 
