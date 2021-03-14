@@ -1,5 +1,27 @@
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
-import { Skill, User } from './types/User.types';
+import { User } from './types/User.types';
+import { IsEmail } from "class-validator";
+import { Skill } from './types/Skill.types';
+
+@InputType()
+class NewUserInput {
+
+    @Field()
+    name: String;
+
+    @Field({ nullable: true })
+    picture?: String;
+
+    @Field({ nullable: true })
+    company?: String;
+
+    @Field()
+    @IsEmail()
+    email: String;
+
+    @Field()
+    phone: String;
+}
 
 @InputType()
 class UpdateUserInput implements Partial<User> {
@@ -11,6 +33,7 @@ class UpdateUserInput implements Partial<User> {
     company?: String;
 
     @Field({ nullable: true })
+    @IsEmail()
     email: String;
 
     @Field({ nullable: true })
@@ -32,23 +55,32 @@ export class UserResolver {
         return filtered;
     }
 
-    @Mutation(() => String)
+    @Mutation(() => User)
+    async newUser (
+        @Arg("newdata", {}) newdata: NewUserInput
+    ) {
+
+        // check if email is registered
+        let email = await User.findOne({ email: newdata.email });
+        if (email != undefined) throw `Email ${newdata.email} has already been registered.`
+
+        User.insert(newdata);
+        return newdata;
+    }
+
+    @Mutation(() => User)
     async updateUser(
         @Arg("id", {}) id: number,
         @Arg('newdata', {}) newdata: UpdateUserInput
     ) {
-        // var updateuser: User|undefined = this.userCollection.find(user => user.id === id);
 
-        // if (updateuser != undefined) {
-        //     console.log( {
-        //         ...updateuser,
-        //         ...newdata
-        //     });
-        // }
+        let updateUser = await User.findOneOrFail(id);
+        // if (updateUser == undefined) throw `User with ID ${id} not found.`;
 
-        return "updated";
+        const newUser = {...updateUser, ...newdata};
+        User.update(id, newUser);
 
-        // do some error stuff
+        return newUser;
     }
 
 }
