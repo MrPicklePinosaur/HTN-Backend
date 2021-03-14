@@ -1,12 +1,12 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
-import { Skill } from './Skill.types'
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToMany, OneToMany } from 'typeorm';
+import { UserSkill } from "./UserSkill.types";
 
 @ObjectType() @Entity()
 export class User extends BaseEntity {
 
     @Field(() => ID) @PrimaryGeneratedColumn()
-    id: number | null = null;
+    id: number;
 
     @Field() @Column()
     name: String;
@@ -23,10 +23,8 @@ export class User extends BaseEntity {
     @Field() @Column()
     phone: String;
 
-    // @Field(type => [Skill]) @Column()
-    // skills: Skill[]
+    @OneToMany(() => UserSkill, userskill => userskill.user)
+    skillConnection: Promise<UserSkill[]>;
 
-    constructor() {
-        super();
-    }
+    // @Field(() => [Skill])
 }

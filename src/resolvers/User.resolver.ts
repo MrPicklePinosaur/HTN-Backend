@@ -1,7 +1,6 @@
 import { Arg, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
-import { User } from './types/User.types';
+import { User } from '../types/User.types';
 import { IsEmail } from "class-validator";
-import { Skill } from './types/Skill.types';
 
 @InputType()
 class NewUserInput {
@@ -59,12 +58,11 @@ export class UserResolver {
     async newUser (
         @Arg("newdata", {}) newdata: NewUserInput
     ) {
-
         // check if email is registered
         let email = await User.findOne({ email: newdata.email });
         if (email != undefined) throw `Email ${newdata.email} has already been registered.`
 
-        User.insert(newdata);
+        User.create(newdata).save();
         return newdata;
     }
 
@@ -75,7 +73,6 @@ export class UserResolver {
     ) {
 
         let updateUser = await User.findOneOrFail(id);
-        // if (updateUser == undefined) throw `User with ID ${id} not found.`;
 
         const newUser = {...updateUser, ...newdata};
         User.update(id, newUser);

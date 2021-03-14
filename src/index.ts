@@ -4,7 +4,8 @@ import { buildSchema } from 'type-graphql';
 import express from 'express';
 
 import { initDB } from './services/db.service';
-import { UserResolver } from './resolver';
+import { UserResolver } from './resolvers/User.resolver';
+import { SkillResolver } from './resolvers/Skill.resolver';
 
 
 const main = async () => {
@@ -12,7 +13,7 @@ const main = async () => {
     console.log("db connected");
 
     const schema = await buildSchema({
-        resolvers: [ UserResolver ]
+        resolvers: [ UserResolver, SkillResolver ]
     });
 
     const apollo = new ApolloServer({ schema });
