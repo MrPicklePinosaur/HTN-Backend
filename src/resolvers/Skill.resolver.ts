@@ -15,8 +15,8 @@ export class GetSkillsInput {
 export class SkillResolver {
 
     @Query(() => [Skill])
-    async getSkills (
-        @Arg("options", {}) options: GetSkillsInput
+    async getSkills(
+        @Arg("options", { nullable: true }) options: GetSkillsInput
     ) {
         let skills = await Skill.find();
 
@@ -24,11 +24,10 @@ export class SkillResolver {
     }
 
     @Mutation(() => Skill)
-    async newSkill (
+    async newSkill(
         @Arg("name", {}) name: String
     ) {
-        Skill.create({ name: name }).save();
-        return { name: name };
+        return Skill.create({ name: name }).save();
     }
 
 }

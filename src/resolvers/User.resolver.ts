@@ -43,7 +43,7 @@ class UpdateUserInput implements Partial<User> {
 export class UserResolver {
 
     @Query(() => [User])
-    async getUsers (
+    async getUsers(
         @Arg("id", { nullable: true }) id: number
     ): Promise<User[]> {
 
@@ -55,15 +55,14 @@ export class UserResolver {
     }
 
     @Mutation(() => User)
-    async newUser (
+    async newUser(
         @Arg("newdata", {}) newdata: NewUserInput
     ) {
         // check if email is registered
         let email = await User.findOne({ email: newdata.email });
         if (email != undefined) throw `Email ${newdata.email} has already been registered.`
 
-        User.create(newdata).save();
-        return newdata;
+        return User.create(newdata).save();
     }
 
     @Mutation(() => User)
