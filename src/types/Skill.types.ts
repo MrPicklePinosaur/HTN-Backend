@@ -11,6 +11,14 @@ export class Skill extends BaseEntity {
     @Field() @Column()
     name: String;
 
+    @Field(() => Number)
+    async frequency() {
+        const skills = await UserSkill.find({
+            where: { skillId: this.id }
+        });
+        return skills.length;
+    }
+
     @ManyToOne(() => UserSkill, userskill => userskill.skill)
     userConnection: Promise<UserSkill[]>
 }

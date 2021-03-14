@@ -1,5 +1,6 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Field, FieldResolver, InputType, Mutation, Query, Resolver, Root } from "type-graphql";
 import { Skill } from "../types/Skill.types";
+import { UserSkill } from "../types/UserSkill.types";
 
 @InputType()
 export class GetSkillsInput {
@@ -11,7 +12,7 @@ export class GetSkillsInput {
     max_frequency: number; 
 }
 
-@Resolver()
+@Resolver(of => Skill)
 export class SkillResolver {
 
     @Query(() => [Skill])
@@ -19,8 +20,21 @@ export class SkillResolver {
         @Arg("options", { nullable: true }) options: GetSkillsInput
     ) {
         let skills = await Skill.find();
+        let filtered = [];
+        for (const skill of skills) {
+            // const freq = await UserSkill.find({ skillId: skill.id});
+            const freq = await skill.frequency();
+            var insert = true;
+            if (options?.min_frequency != undefined) {
+                if (freq < options.min_frequency) insert = false;
+            }
+            if (options?.max_frequency != undefined) {
+                if (freq > options.max_frequency) insert = false;
+            }
+            if (insert) filtered.push(skill);
+        }
 
-        return skills;
+        return filtered;
     }
 
     @Mutation(() => Skill)
@@ -29,5 +43,11 @@ export class SkillResolver {
     ) {
         return Skill.create({ name: name }).save();
     }
+
+    // @FieldResolver(() => Number)
+    // async frequency(@Root() skill: Skill) {
+    //     const skills = await UserSkill.find({ skillId: skill.id });
+    //     return skills.length;
+    // }
 
 }
