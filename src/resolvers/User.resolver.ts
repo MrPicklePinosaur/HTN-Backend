@@ -117,7 +117,7 @@ const linkSkills = async (user: User, skills: NewSkillInput[]) => {
         }
 
         //Create skill object
-        const newUserSkill = await UserSkill.create({
+        await UserSkill.create({
             userId: user.id,
             skillId: linkedSkill.id,
             rating: skill.rating
