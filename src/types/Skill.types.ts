@@ -19,6 +19,6 @@ export class Skill extends BaseEntity {
         return skills.length;
     }
 
-    @ManyToOne(() => UserSkill, userskill => userskill.skill)
-    userConnection: Promise<UserSkill[]>
+    @OneToMany(() => UserSkill, userskill => userskill.skill)
+    userConnection: UserSkill[]
 }

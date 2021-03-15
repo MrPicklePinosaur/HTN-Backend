@@ -22,7 +22,6 @@ export class SkillResolver {
         let skills = await Skill.find();
         let filtered = [];
         for (const skill of skills) {
-            // const freq = await UserSkill.find({ skillId: skill.id});
             const freq = await skill.frequency();
             var insert = true;
             if (options?.min_frequency != undefined) {
@@ -43,11 +42,4 @@ export class SkillResolver {
     ) {
         return Skill.create({ name: name }).save();
     }
-
-    // @FieldResolver(() => Number)
-    // async frequency(@Root() skill: Skill) {
-    //     const skills = await UserSkill.find({ skillId: skill.id });
-    //     return skills.length;
-    // }
-
 }

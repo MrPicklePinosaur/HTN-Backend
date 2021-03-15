@@ -15,8 +15,14 @@ export class UserSkill extends BaseEntity {
     @ManyToOne(() => User, user => user.skillConnection, { primary: true }) @JoinColumn({ name: "userId" })
     user: Promise<User>;
 
-    @OneToMany(() => Skill, skill => skill.userConnection, { primary: true }) @JoinColumn({ name: "skillId"})
-    skill: Promise<Skill>;
+    @ManyToOne(() => Skill, skill => skill.userConnection, { primary: true }) @JoinColumn({ name: "skillId"})
+    skill: Skill;
+
+    @Field(() => String)
+    async skillname() {
+        const skill = await Skill.findOne(this.skillId);
+        return skill?.name;
+    }
 
     @Field() @Column()
     rating: number;

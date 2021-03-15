@@ -3,7 +3,6 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToMany, OneToMa
 import { UserSkill } from "./UserSkill.types";
 import { Skill } from "./Skill.types";
 
-
 @ObjectType() @Entity()
 export class User extends BaseEntity {
 
@@ -26,22 +25,11 @@ export class User extends BaseEntity {
     phone: String;
 
     @OneToMany(() => UserSkill, userskill => userskill.user)
-    skillConnection: Promise<UserSkill[]>;
+    skillConnection: UserSkill[];
 
     @Field(() => [UserSkill])
     async skills() {
-        const userSkills: UserSkill[] = await UserSkill.find({
-            join: {
-                alias: "user",
-                leftJoinAndSelect: {
-                    skill: "user.skill"
-                }
-            },
-            where: { userId: this.id }
-        });
-
-        console.log(userSkills);
-
-        return userSkills;
+        const skills = await UserSkill.find({ userId: this.id });
+        return skills;
     }
 }

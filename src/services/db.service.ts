@@ -29,6 +29,12 @@ export const populateDB = async () => {
         name: "java"
     }).save();
 
+    UserSkill.create({
+        userId: 1,
+        skillId: 1,
+        rating: 10
+    }).save();
+
 }
 
 export const initDB = async () => {
@@ -39,5 +45,4 @@ export const initDB = async () => {
     await dbconnection.synchronize();
 
     await populateDB();
-    
 }
