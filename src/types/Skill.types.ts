@@ -13,10 +13,10 @@ export class Skill extends BaseEntity {
 
     @Field(() => Number)
     async frequency() {
-        const skills = await UserSkill.find({
+        const skills = await UserSkill.count({
             where: { skillId: this.id }
         });
-        return skills.length;
+        return skills;
     }
 
     @OneToMany(() => UserSkill, userskill => userskill.skill)
