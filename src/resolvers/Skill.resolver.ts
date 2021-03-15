@@ -1,34 +1,24 @@
 import { Arg, Field, FieldResolver, InputType, Mutation, Query, Resolver, Root } from "type-graphql";
 import { Skill } from "../types/Skill.types";
 import { UserSkill } from "../types/UserSkill.types";
-
-@InputType()
-export class GetSkillsInput {
-
-    @Field({ nullable: true })
-    min_frequency: number; 
-
-    @Field({ nullable: true })
-    max_frequency: number; 
-}
-
 @Resolver(of => Skill)
 export class SkillResolver {
 
     @Query(() => [Skill])
     async getSkills(
-        @Arg("options", { nullable: true }) options: GetSkillsInput
+        @Arg("min_frequency", { nullable: true }) min_frequency: number,
+        @Arg("max_frequency", { nullable: true }) max_frequency: number
     ) {
         let skills = await Skill.find();
         let filtered = [];
         for (const skill of skills) {
             const freq = await skill.frequency();
             var insert = true;
-            if (options?.min_frequency != undefined) {
-                if (freq < options.min_frequency) insert = false;
+            if (min_frequency != undefined) {
+                if (freq < min_frequency) insert = false;
             }
-            if (options?.max_frequency != undefined) {
-                if (freq > options.max_frequency) insert = false;
+            if (max_frequency != undefined) {
+                if (freq > max_frequency) insert = false;
             }
             if (insert) filtered.push(skill);
         }

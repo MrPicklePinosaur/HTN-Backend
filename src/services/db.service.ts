@@ -37,6 +37,10 @@ export const populateDB = async () => {
 
 }
 
+// export const bigPopulateDb = async () => {
+
+// }
+
 export const initDB = async () => {
 
     const dbconnection = await createConnection();

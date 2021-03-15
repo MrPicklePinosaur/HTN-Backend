@@ -70,7 +70,6 @@ export class UserResolver {
         @Arg("id", {}) id: number,
         @Arg('newdata', {}) newdata: UpdateUserInput
     ) {
-
         let updateUser = await User.findOneOrFail(id);
 
         const newUser = {...updateUser, ...newdata};
