@@ -74,5 +74,6 @@ export const bigPopulateDb = async () => {
 export const initDB = async () => {
 
     await createConnection();
+    await bigPopulateDb();
 
 }
