@@ -1,7 +1,5 @@
-import { Arg, Field, FieldResolver, InputType, Mutation, Query, Resolver, Root } from "type-graphql";
-import { createQueryBuilder, getConnection, LessThanOrEqual } from "typeorm";
+import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Skill } from "../types/Skill.types";
-import { UserSkill } from "../types/UserSkill.types";
 
 @InputType()
 export class NewSkillInput {
@@ -13,7 +11,7 @@ export class NewSkillInput {
     rating: number
 }
 
-@Resolver(of => Skill)
+@Resolver()
 export class SkillResolver {
 
     @Query(() => [Skill])
@@ -21,19 +19,6 @@ export class SkillResolver {
         @Arg("min_frequency", { nullable: true }) min_frequency: number,
         @Arg("max_frequency", { nullable: true }) max_frequency: number
     ) {
-        // if (min_frequency == null) min_frequency = 0;
-        // if (max_frequency == null) max_frequency = 99;
-
-        // const skills = await createQueryBuilder(Skill, "skill")
-        //     .select("skill")
-        //     .where("skill.frequency >= :min_frequency AND skill.frequency <= :max_frequency", { min_frequency, max_frequency })
-        //     .execute();
-        // console.log(skills);
-        // let skills = await Skill.find({
-        //    where: {
-        //        frequency: LessThanOrEqual(max_frequency),
-        //    } 
-        // })
         let skills = await Skill.find();
         let filtered = [];
         for (const skill of skills) {
