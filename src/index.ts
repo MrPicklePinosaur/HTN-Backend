@@ -4,7 +4,7 @@ import { buildSchema } from 'type-graphql';
 import express from 'express';
 import morgan from 'morgan';
 
-import { initDB } from './services/db.service';
+import { initDB, populateDB } from './services/db.service';
 import { UserResolver } from './resolvers/User.resolver';
 import { SkillResolver } from './resolvers/Skill.resolver';
 import { UserSkillResolver } from './resolvers/UserSkill.resolver';
@@ -21,6 +21,11 @@ const main = async () => {
     const app = express();
     app.use(morgan('combined'));
     apollo.applyMiddleware({ app });
+
+    app.get('/purge', async (req, res) => {
+        await populateDB;
+        res.send('Reinitialized db');
+    })
 
     app.listen(3000, () => {
         console.log("server started");

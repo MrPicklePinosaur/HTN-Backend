@@ -1,8 +1,10 @@
-import { createConnection } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 import { Skill } from '../types/Skill.types';
 
 import { User } from '../types/User.types';
 import { UserSkill } from '../types/UserSkill.types';
+
+import hackerData from '../database/hacker-data-2021.json'
 
 /* fill db with some dummy data */
 export const populateDB = async () => {
@@ -37,16 +39,40 @@ export const populateDB = async () => {
 
 }
 
-// export const bigPopulateDb = async () => {
+export const bigPopulateDb = async () => {
 
-// }
-
-export const initDB = async () => {
-
-    const dbconnection = await createConnection();
-
+    const dbconnection = getConnection();
     await dbconnection.dropDatabase();
     await dbconnection.synchronize();
 
-    await populateDB();
+    for (const userData of hackerData) {
+        var newUser = await new User();
+        newUser.name = userData.name;
+        newUser.email = userData.email;
+        newUser.phone = userData.phone;
+        await newUser.save();
+
+        for (const skill of userData.skills) {
+            var findSkill = await Skill.findOne({ name: skill.name });
+
+            if (findSkill == null) {
+                var newSkill = await new Skill();
+                newSkill.name = skill.name;
+                findSkill = await newSkill.save();
+            }
+
+            var newUserSkill = await new UserSkill();
+            newUserSkill.userId = newUser.id;
+            newUserSkill.skillId = findSkill.id;
+            newUserSkill.rating = skill.rating;
+            await newUserSkill.save();
+        }
+    }
+
+}
+
+export const initDB = async () => {
+
+    await createConnection();
+
 }
