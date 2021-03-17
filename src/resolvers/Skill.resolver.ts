@@ -21,6 +21,8 @@ export class SkillResolver {
     ) {
         let skills = await Skill.find();
         let filtered = [];
+
+        // filter skills based on frequency
         for (const skill of skills) {
             const freq = await skill.frequency();
             var insert = true;

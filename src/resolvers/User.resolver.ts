@@ -71,6 +71,7 @@ export class UserResolver {
         let email = await User.findOne({ email: newdata.email });
         if (email != undefined) throw `Email ${newdata.email} has already been registered.`
 
+        //
         const newUser = await User.create({
             name: newdata.name,
             picture: newdata.picture,
@@ -96,7 +97,7 @@ export class UserResolver {
             await linkSkills(updateUser, newdata.skills);
         }
 
-        delete newdata.skills;
+        delete newdata.skills; //removes skills field
         const newUser = {...updateUser, ...newdata };
         await User.update(id, newUser);
 

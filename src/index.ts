@@ -22,6 +22,7 @@ const main = async () => {
     app.use(morgan('combined'));
     apollo.applyMiddleware({ app });
 
+    // endpoint for purging db
     app.get('/purge', async (req, res) => {
         await populateDB;
         res.send('Reinitialized db');

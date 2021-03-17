@@ -6,7 +6,7 @@ import { UserSkill } from '../types/UserSkill.types';
 
 import hackerData from '../database/hacker-data-2021.json'
 
-/* fill db with some dummy data */
+// fill db with some dummy data - small test set
 export const populateDB = async () => {
 
     User.create({
@@ -39,6 +39,7 @@ export const populateDB = async () => {
 
 }
 
+// fill database with the real testing set
 export const bigPopulateDb = async () => {
 
     const dbconnection = getConnection();
